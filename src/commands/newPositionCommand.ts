@@ -13,15 +13,15 @@ export class NewPositionCommand extends CommandBase {
     }
 
     public async execute(turnContext: TurnContext): Promise<void> {
-        const locations = await this.services.locationService.getAll();
-        const hiringManagers = await this.services.recruiterService.getAllHiringManagers();
+        // const locations = await this.services.locationService.getAll();
+        // const hiringManagers = await this.services.recruiterService.getAllHiringManagers();
 
-        const signedIn = await this.tokenProvider.hasToken(turnContext);
+        // const signedIn = await this.tokenProvider.hasToken(turnContext);
 
-        const card = this.services.templatingService.getNewPositionAttachment(hiringManagers, locations, "chat", signedIn);
+        // const card = this.services.templatingService.getNewPositionAttachment(hiringManagers, locations, "chat", signedIn);
 
-        const activity = MessageFactory.attachment(card);
+        // const activity = MessageFactory.attachment(card);
 
-        await turnContext.sendActivity(activity);
+        // await turnContext.sendActivity(activity);
     }
 }

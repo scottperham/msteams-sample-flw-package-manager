@@ -9,20 +9,20 @@ export class CandidateDetailsCommand extends CommandBase {
     }
 
     public async execute(turnContext: TurnContext): Promise<void> {
-        const text = this.getTextWithoutCommand(turnContext.activity.text);
-        const candidate = await this.services.candidateService.searchOne(text);
-        const recruiters = await this.services.recruiterService.getAllInterviewers();
+        // const text = this.getTextWithoutCommand(turnContext.activity.text);
+        // const candidate = await this.services.candidateService.searchOne(text);
+        // const recruiters = await this.services.recruiterService.getAllInterviewers();
 
-        if (!candidate) {
-            await turnContext.sendActivity("Cannot find that candidate");
-            return;
-        }
+        // if (!candidate) {
+        //     await turnContext.sendActivity("Cannot find that candidate");
+        //     return;
+        // }
 
-        const card = this.services.templatingService.getCandidateAttachment(candidate, recruiters);
+        // const card = this.services.templatingService.getCandidateAttachment(candidate, recruiters);
 
-        const activity = MessageFactory.attachment(card);
+        // const activity = MessageFactory.attachment(card);
 
-        await turnContext.sendActivity(activity);
+        // await turnContext.sendActivity(activity);
     }
 }
 

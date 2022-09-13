@@ -10,18 +10,18 @@ export class PositionDetailsCommand extends CommandBase {
     }
 
     public async execute(turnContext: TurnContext): Promise<void> {
-        const text = this.getTextWithoutCommand(turnContext.activity.text);
-        const position = await this.services.positionService.searchOne(text);
+        // const text = this.getTextWithoutCommand(turnContext.activity.text);
+        // const position = await this.services.positionService.searchOne(text);
 
-        if (!position) {
-            await turnContext.sendActivity("Cannot find that position");
-            return;
-        }
+        // if (!position) {
+        //     await turnContext.sendActivity("Cannot find that position");
+        //     return;
+        // }
 
-        const card = this.services.templatingService.getPositionAttachment(position);
+        // const card = this.services.templatingService.getPositionAttachment(position);
 
-        const activity = MessageFactory.attachment(card);
+        // const activity = MessageFactory.attachment(card);
 
-        await turnContext.sendActivity(activity);
+        // await turnContext.sendActivity(activity);
     }
 }
