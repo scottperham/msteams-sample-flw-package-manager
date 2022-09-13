@@ -3,6 +3,9 @@ import { AdaptiveCardInvokeResponse, Attachment, CardFactory, FileConsentCardRes
 import { ServiceContainer } from "./data/serviceContainer";
 import { TokenProvider } from "./tokenProvider";
 import "isomorphic-fetch";
+import { convertInvokeActionDataToPackageData } from "./data/dtos";
+import { getErrorMessageFromNotificationResult, NotificationResult } from "./data/notificationService";
+import { getErrorMessageFromInstallBotResult, InstallBotResult } from "./data/graphApiService";
 
 export class InvokeActivityHandler {
 
@@ -132,6 +135,61 @@ export class InvokeActivityHandler {
                 attachmentLayout: "list"
             }
         });
+    }
+    
+    public async handleNotifyAccountManager(invokeData: any, authorName: string, tenantId: string): Promise<AdaptiveCardInvokeResponse> {
+        const packageData = convertInvokeActionDataToPackageData(invokeData, authorName);
+        const parcel = await this.services.packageService.getByPackageId(packageData.packageId);
+
+        if (!parcel) {
+            return this.getAdaptiveCardInvokeResponse(404);
+        }
+
+        if (!parcel.accountManager) {
+            return this.getAdaptiveCardInvokeResponse(404);
+        }
+
+        const activity = MessageFactory.text(`This is a message from ${authorName}: ${packageData.message}`);
+
+        let pnResult = await this.services.notificationService.sendProactiveNotification(parcel.accountManager.alias, tenantId, activity);
+        let error = "";
+
+        if (pnResult == NotificationResult.BotNotInstalled) {
+            const biResult = await this.services.graphApiService.installBotForUser(parcel.accountManager.alias, tenantId);
+
+            if (biResult != InstallBotResult.Success){
+                error = getErrorMessageFromInstallBotResult(biResult);
+                return this.getAdaptiveCardInvokeResponse(200, this.services.templatingService.getErrorAttachment(error));
+            }
+
+            pnResult = await this.services.notificationService.sendProactiveNotification(parcel.accountManager.alias, tenantId, activity);
+
+            if (pnResult != NotificationResult.Success) {
+                error = getErrorMessageFromNotificationResult(pnResult);
+                return this.getAdaptiveCardInvokeResponse(200, this.services.templatingService.getErrorAttachment(error));
+            }
+        }
+
+        const updatedCard = this.services.templatingService.getPackageMessageSentAttachment(parcel, packageData.message);
+        return this.getAdaptiveCardInvokeResponse(200, updatedCard);
+    }
+    
+    public async handleMarkAsSent(invokeData: any): Promise<AdaptiveCardInvokeResponse> {
+        const packageData = convertInvokeActionDataToPackageData(invokeData, "");
+        const parcel = await this.services.packageService.getByPackageId(packageData.packageId);
+
+        if (!parcel) {
+            return this.getAdaptiveCardInvokeResponse(404);
+        }
+
+        if (!parcel.accountManager) {
+            return this.getAdaptiveCardInvokeResponse(404);
+        }
+
+        parcel.status = "Sent";
+
+        const updatedCard = this.services.templatingService.getPackageMarkedAsSentAttachment(parcel);
+        return this.getAdaptiveCardInvokeResponse(200, updatedCard);
     }
 
     private getAdaptiveCardInvokeResponse(status: number, attachment?: Attachment): AdaptiveCardInvokeResponse {

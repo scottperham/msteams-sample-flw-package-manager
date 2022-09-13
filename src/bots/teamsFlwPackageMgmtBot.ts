@@ -1,17 +1,13 @@
 import { TeamsActivityHandler, TurnContext, UserState, Activity, SigninStateVerificationQuery, MessageFactory, AdaptiveCardInvokeResponse, AdaptiveCardInvokeValue, MessagingExtensionQuery, MessagingExtensionResponse, MessagingExtensionAction, MessagingExtensionActionResponse, FileConsentCardResponse, StatePropertyAccessor } from "botbuilder";
 import { CommandBase } from "../commands/commandBase";
 import { HelpCommand } from "../commands/helpCommand";
-import { PositionDetailsCommand } from "../commands/positionDetailsCommand";
-import { CandidateDetailsCommand } from "../commands/candidateDetailsCommand";
-import { TopCandidatesCommand } from "../commands/topCandidatesCommand";
+import { PackageDetailsCommand } from "../commands/packageDetailsCommand";
 import { ServiceContainer } from "../services/data/serviceContainer";
 import { InvokeActivityHandler } from "../services/invokeActivityHandler";
 import { TokenProvider } from "../services/tokenProvider";
-import { NewPositionCommand } from "../commands/newPositionCommand";
-import { CandidateSummaryCommand } from "../commands/candidateSummaryCommand";
 import { SignOutCommand } from "../commands/signOutCommand";
 import { SignInCommand } from "../commands/signInCommand";
-import { OpenPositionsCommand } from "../commands/openPositionsCommand";
+import { SetupCommand } from "../commands/setupCommand";
 
 export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
 
@@ -33,12 +29,8 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
         // Setup a simple array of available command implementations and whether they require authentication or not
         this.commands = [
             {command: new HelpCommand(services), requireAuth: false },
-            {command: new CandidateDetailsCommand(services), requireAuth: true},
-            {command: new PositionDetailsCommand(services), requireAuth: true},
-            {command: new TopCandidatesCommand(services), requireAuth: true},
-            {command: new NewPositionCommand(services, this.tokenProvider), requireAuth: true},
-            {command: new CandidateSummaryCommand(services), requireAuth: true},
-            {command: new OpenPositionsCommand(services), requireAuth: true},
+            {command: new PackageDetailsCommand(services), requireAuth: false},
+            {command: new SetupCommand(services, this.tokenProvider), requireAuth: true},
             {command: new SignOutCommand(services, this.tokenProvider), requireAuth: false},
             {command: new SignInCommand(services, this.tokenProvider), requireAuth: false}
         ]
@@ -131,15 +123,13 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
     // Handles clicking an adaptive card button with `Action.Execute`
     protected async onAdaptiveCardInvoke(context: TurnContext, invokeValue: AdaptiveCardInvokeValue): Promise<AdaptiveCardInvokeResponse> {
         
-        // Buttons with action.execute have a "verb" property to determine what the bot should do with the posted data
-        // switch(invokeValue.action.verb) {
-        //     case "LeaveComment":
-        //         return await this.invokeHandler.handleLeaveComment(invokeValue.action.data, context.activity.from.name);
-        //     case "ScheduleInterview":
-        //         return await this.invokeHandler.handleScheduleInterview(invokeValue.action.data);
-        //     case "CreatePosition":
-        //         return await this.invokeHandler.handleCreatePosition(invokeValue.action.data);
-        // }
+        //Buttons with action.execute have a "verb" property to determine what the bot should do with the posted data
+        switch(invokeValue.action.verb) {
+            case "NotifyAm":
+                return await this.invokeHandler.handleNotifyAccountManager(invokeValue.action.data, context.activity.from.name, context.activity.channelData.tenant.id);
+            case "MarkAsSent":
+                return await this.invokeHandler.handleMarkAsSent(invokeValue.action.data);
+        }
 
         return {
             statusCode: 400,
@@ -152,16 +142,6 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
     protected async handleTeamsSigninTokenExchange(context: TurnContext, query: SigninStateVerificationQuery): Promise<void> {
         await this.invokeHandler.handleSignInVerifyState(context);
     }
-
-    // Handles the callback from clicking Allow in a file consent adaptive card
-    // protected async handleTeamsFileConsentAccept(context: TurnContext, fileConsentCardResponse: FileConsentCardResponse): Promise<void> {
-    //     await this.invokeHandler.handleFileConsent(context, fileConsentCardResponse, true);
-    // }
-
-    // // Handles the callback from clicking Decline in a file consent adaptive card
-    // protected async handleTeamsFileConsentDecline(context: TurnContext, fileConsentCardResponse: FileConsentCardResponse): Promise<void> {
-    //     await this.invokeHandler.handleFileConsent(context, fileConsentCardResponse, false);
-    // }
 
     private hasFiles(activity: Activity) : boolean {
         return activity.attachments?.some(x => x.contentType == "application/vnd.microsoft.teams.file.download.info") || false;

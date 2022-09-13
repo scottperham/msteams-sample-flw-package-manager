@@ -1,0 +1,46 @@
+[
+    {
+        "packageId": "1",
+        "accountManagerId": 1,
+        "customer": "Customer 1",
+        "customerId": "",
+        "contains": "",
+        "priority": "",
+        "deliveryAddress": "",
+        "status": "",
+        "coshh": false
+    },
+    {
+        "packageId": "2",
+        "accountManagerId": 2,
+        "customer": "Customer 2",
+        "customerId": "",
+        "contains": "",
+        "priority": "",
+        "deliveryAddress": "",
+        "status": "",
+        "coshh": false
+    },
+    {
+        "packageId": "3",
+        "accountManagerId": 2,
+        "customer": "Customer 3",
+        "customerId": "",
+        "contains": "",
+        "priority": "",
+        "deliveryAddress": "",
+        "status": "",
+        "coshh": false
+    },
+    {
+        "packageId": "4",
+        "accountManagerId": 3,
+        "customer": "Customer 4",
+        "customerId": "",
+        "contains": "",
+        "priority": "",
+        "deliveryAddress": "",
+        "status": "",
+        "coshh": false
+    }
+  ]

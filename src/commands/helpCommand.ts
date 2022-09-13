@@ -10,6 +10,8 @@ export class HelpCommand extends CommandBase {
 
     public async execute(turnContext: TurnContext): Promise<void> {
 
+        await turnContext.sendActivity("HELP!");
+
         // const candidate = await this.services.candidateService.searchOne("");
 
         // const helpMessage = "Here's what I can help you with:\n\n"

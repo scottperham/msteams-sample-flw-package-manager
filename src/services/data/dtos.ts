@@ -9,7 +9,7 @@ export type User = IdentifiableEntity & {
     jobTitle: string
     name: string
     profileImage: string
-    upn: string
+    alias: string
 }
 
 export type Package = IdentifiableEntity & {
@@ -23,6 +23,20 @@ export type Package = IdentifiableEntity & {
     deliveryAddress: string
     status: string
     coshh: boolean
+}
+
+export type AccountManagerMessage = {
+    authorName: string
+    packageId: string
+    message: string
+}
+
+export const convertInvokeActionDataToPackageData = (data: any, authorName: string) : AccountManagerMessage => {
+    return {
+        authorName,
+        packageId: data.packageId,
+        message: data.message
+    }
 }
 
 /* Extra adaptive card types! */
