@@ -1,0 +1,99 @@
+{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "TextBlock",
+      "size": "Medium",
+      "weight": "Bolder",
+      "text": "${packageId} - Package Details"
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "$data": "${properties}",
+          "title": "${key}:",
+          "value": "${value}"
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.ShowCard",
+      "title": "Notify Account Manager",
+      "card": {
+        "type": "AdaptiveCard",
+        "body": [
+          {
+            "type": "TextBlock",
+            "text": "Account Manager:",
+            "wrap": true,
+            "weight": "Bolder"
+          },
+          {
+            "type": "ColumnSet",
+            "columns": [
+              {
+                "type": "Column",
+                "items": [
+                  {
+                    "type": "Image",
+                    "style": "Person",
+                    "url": "${accountManager.profileImage}",
+                    "size": "Small"
+                  }
+                ],
+                "width": "auto"
+              },
+              {
+                "type": "Column",
+                "items": [
+                  {
+                    "type": "TextBlock",
+                    "spacing": "None",
+                    "wrap": true,
+                    "text": "${accountManager.name}",
+                    "weight": "Bolder"
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "${$root.accountManager.jobTitle}",
+                    "wrap": true,
+                    "spacing": "None",
+                    "isSubtle": true
+                  }
+                ],
+                "width": "stretch"
+              }
+            ]
+          },
+          {
+            "type": "Input.Text",
+            "id": "message",
+            "placeholder": "Message to Account Manager",
+            "isMultiline": true
+          }
+        ],
+        "actions": [
+          {
+            "type": "Action.Submit",
+            "title": "Send"
+          }
+        ],
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+      }
+    },
+    {
+      "type": "Action.Submit",
+      "title": "Mark as Sent"
+    },
+    {
+      "type": "Action.OpenUrl",
+      "title": "Details",
+      "url": "${viewUrl}"
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.4"
+}

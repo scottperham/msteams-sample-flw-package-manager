@@ -1,0 +1,26 @@
+{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "TextBlock",
+      "size": "Medium",
+      "weight": "Bolder",
+      "text": "${packageId} - Package Details"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Package marked as sent.",
+      "wrap": true,
+      "weight": "Bolder"
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.OpenUrl",
+      "title": "Details",
+      "url": "${viewUrl}"
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.4"
+}
