@@ -10,10 +10,10 @@ export class OpenPositionsCommand extends CommandBase {
     }
 
     public async execute(turnContext: TurnContext): Promise<void> {
-        const positions = await this.services.positionService.getAll();
+        // const positions = await this.services.positionService.getAll();
 
-        const positionsAttachment = this.services.templatingService.getPositionsAsListAttachment(positions, "position", "Open positions");
+        // const positionsAttachment = this.services.templatingService.getPositionsAsListAttachment(positions, "position", "Open positions");
 
-        await turnContext.sendActivity(MessageFactory.attachment(positionsAttachment));
+        // await turnContext.sendActivity(MessageFactory.attachment(positionsAttachment));
     }
 }

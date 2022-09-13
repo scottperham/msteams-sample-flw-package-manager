@@ -64,7 +64,8 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
         this.onInstallationUpdate(async (context, next): Promise<void> => {
             // If the app was updated or uninstalled, clear the welcome message state for the current user
             if (context.activity.action == "add") {
-                await context.sendActivity(MessageFactory.attachment(services.templatingService.getWelcomeMessageAttachment()));
+                //TODO Get welcome message...
+                //await context.sendActivity(MessageFactory.attachment(services.templatingService.getWelcomeMessageAttachment()));
             }
             await next();
         });
@@ -131,14 +132,14 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
     protected async onAdaptiveCardInvoke(context: TurnContext, invokeValue: AdaptiveCardInvokeValue): Promise<AdaptiveCardInvokeResponse> {
         
         // Buttons with action.execute have a "verb" property to determine what the bot should do with the posted data
-        switch(invokeValue.action.verb) {
-            case "LeaveComment":
-                return await this.invokeHandler.handleLeaveComment(invokeValue.action.data, context.activity.from.name);
-            case "ScheduleInterview":
-                return await this.invokeHandler.handleScheduleInterview(invokeValue.action.data);
-            case "CreatePosition":
-                return await this.invokeHandler.handleCreatePosition(invokeValue.action.data);
-        }
+        // switch(invokeValue.action.verb) {
+        //     case "LeaveComment":
+        //         return await this.invokeHandler.handleLeaveComment(invokeValue.action.data, context.activity.from.name);
+        //     case "ScheduleInterview":
+        //         return await this.invokeHandler.handleScheduleInterview(invokeValue.action.data);
+        //     case "CreatePosition":
+        //         return await this.invokeHandler.handleCreatePosition(invokeValue.action.data);
+        // }
 
         return {
             statusCode: 400,
@@ -153,14 +154,14 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
     }
 
     // Handles the callback from clicking Allow in a file consent adaptive card
-    protected async handleTeamsFileConsentAccept(context: TurnContext, fileConsentCardResponse: FileConsentCardResponse): Promise<void> {
-        await this.invokeHandler.handleFileConsent(context, fileConsentCardResponse, true);
-    }
+    // protected async handleTeamsFileConsentAccept(context: TurnContext, fileConsentCardResponse: FileConsentCardResponse): Promise<void> {
+    //     await this.invokeHandler.handleFileConsent(context, fileConsentCardResponse, true);
+    // }
 
-    // Handles the callback from clicking Decline in a file consent adaptive card
-    protected async handleTeamsFileConsentDecline(context: TurnContext, fileConsentCardResponse: FileConsentCardResponse): Promise<void> {
-        await this.invokeHandler.handleFileConsent(context, fileConsentCardResponse, false);
-    }
+    // // Handles the callback from clicking Decline in a file consent adaptive card
+    // protected async handleTeamsFileConsentDecline(context: TurnContext, fileConsentCardResponse: FileConsentCardResponse): Promise<void> {
+    //     await this.invokeHandler.handleFileConsent(context, fileConsentCardResponse, false);
+    // }
 
     private hasFiles(activity: Activity) : boolean {
         return activity.attachments?.some(x => x.contentType == "application/vnd.microsoft.teams.file.download.info") || false;
