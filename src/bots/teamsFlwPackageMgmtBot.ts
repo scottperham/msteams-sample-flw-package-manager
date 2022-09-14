@@ -8,12 +8,15 @@ import { TokenProvider } from "../services/tokenProvider";
 import { SignOutCommand } from "../commands/signOutCommand";
 import { SignInCommand } from "../commands/signInCommand";
 import { SetupCommand } from "../commands/setupCommand";
+import { ConsentCommand } from "../commands/consentCommand";
+import { HelloCommand } from "../commands/helloCommand";
 
 export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
 
     userState: UserState;
     invokeHandler: InvokeActivityHandler;
     commands: {command: CommandBase, requireAuth: boolean}[];
+    defaultCommand: CommandBase;
     services: ServiceContainer;
     tokenProvider: TokenProvider;
 
@@ -32,8 +35,11 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
             {command: new PackageDetailsCommand(services), requireAuth: false},
             {command: new SetupCommand(services, this.tokenProvider), requireAuth: true},
             {command: new SignOutCommand(services, this.tokenProvider), requireAuth: false},
-            {command: new SignInCommand(services, this.tokenProvider), requireAuth: false}
+            {command: new SignInCommand(services, this.tokenProvider), requireAuth: false},
+            {command: new ConsentCommand(services), requireAuth: false}
         ]
+
+        this.defaultCommand = new HelloCommand(services);
 
         // This is a generic handler for any inbound activity with a type of "text"
         // This could be a simple text message or something more complex like
@@ -56,8 +62,7 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
         this.onInstallationUpdate(async (context, next): Promise<void> => {
             // If the app was updated or uninstalled, clear the welcome message state for the current user
             if (context.activity.action == "add") {
-                //TODO Get welcome message...
-                //await context.sendActivity(MessageFactory.attachment(services.templatingService.getWelcomeMessageAttachment()));
+                await new ConsentCommand(this.services).execute(context);
             }
             await next();
         });
@@ -97,6 +102,9 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
             
             // Execute the command
             await command.execute(context);
+        }
+        else if (this.defaultCommand) {
+            await this.defaultCommand.execute(context);
         }
         else {
             await context.sendActivity("Sorry, I didn't recognise that command. Type 'help' to see what I can do.");
