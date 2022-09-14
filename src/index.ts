@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as dotenv from 'dotenv';
 import { ServiceContainer } from "./services/data/serviceContainer";
 import express from 'express';
-import configureClientApi from './clientApi';
 import configureBotApi, { configureAdapter } from './botApi';
 import configureNotificationApi from './utilityApi';
 
@@ -44,7 +43,6 @@ services.loadTemplates(templatesPath);
 
 // Configure our APIs
 configureBotApi(app, services, adapter);
-configureClientApi(app, services);
 configureNotificationApi(app, services, adapter);
 
 const port = process.env.port || process.env.PORT || 3978;

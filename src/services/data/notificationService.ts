@@ -9,6 +9,19 @@ export enum NotificationResult {
     FailedToGetAppToken
 }
 
+export const getErrorMessageFromNotificationResult : (x:NotificationResult) => string = (x: NotificationResult) => {
+    switch(x){
+        case NotificationResult.AliasNotFound:
+            return "Alias couldn't be found";
+        case NotificationResult.BotNotInstalled:
+            return "The app isn't currently installed for this user";
+        case NotificationResult.FailedToGetAppToken:
+            return "Unable to acquire an application token";
+    }
+
+    return "Success";
+}
+
 export class NotificationService {
     
     adapter: CloudAdapter;
@@ -25,6 +38,10 @@ export class NotificationService {
 
         if (!chatIdResponse) {
             return NotificationResult.FailedToGetAppToken;
+        }
+
+        if (!chatIdResponse.chatId) {
+            return NotificationResult.BotNotInstalled;
         }
 
         const connectorClient = new ConnectorClient();

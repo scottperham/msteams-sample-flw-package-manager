@@ -1,6 +1,7 @@
 import { isValidUuid } from '@azure/ms-rest-js';
 import { ConfidentialClientApplication } from '@azure/msal-node';
 import { Client } from '@microsoft/microsoft-graph-client';
+import e from 'express';
 import 'isomorphic-fetch';
 import { Chat, NullableOption, User, UserScopeTeamsAppInstallation } from 'microsoft-graph';
 
@@ -16,7 +17,21 @@ type ChatIdResponse = Partial<{
 export enum InstallBotResult {
     Success,
     AliasNotFound,
-    MissingToken
+    MissingToken,
+    NotInCatalog
+}
+
+export const getErrorMessageFromInstallBotResult : (x:InstallBotResult) => string = (x: InstallBotResult) => {
+    switch(x){
+        case InstallBotResult.AliasNotFound:
+            return "Alias couldn't be found";
+        case InstallBotResult.MissingToken:
+            return "Unable to acquire app token";
+        case InstallBotResult.NotInCatalog:
+            return "Unable to find app in either the org or public app stores"
+    }
+
+    return "Success";
 }
 
 export class GraphApiService {
@@ -72,6 +87,9 @@ export class GraphApiService {
             }
             await this.getProactiveChatIdForUserInternal(graphClient, upnOrOid);
         }
+        else {
+            return InstallBotResult.NotInCatalog;
+        }
 
         return InstallBotResult.Success;
     }
@@ -103,7 +121,7 @@ export class GraphApiService {
             .get() as ODataCollection<UserScopeTeamsAppInstallation>;
 
         if (installedApps.value.length == 0) {
-            return {upnOrOid};
+            return {upnOrOid, chatId: undefined};
         }
 
         // https://docs.microsoft.com/en-us/graph/api/userscopeteamsappinstallation-get-chat?view=graph-rest-1.0&tabs=http
