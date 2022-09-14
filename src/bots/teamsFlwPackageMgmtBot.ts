@@ -103,23 +103,6 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
         }
     }
 
-    // Handles when a user clicks an adaptive card button with `Action.Submit` in a messaging extention
-    // ... or adaptive card embeded task module invoked from a messaging extension
-    protected async handleTeamsMessagingExtensionSubmitAction(context: TurnContext, action: MessagingExtensionAction): Promise<MessagingExtensionActionResponse> {
-        return await this.invokeHandler.handleMessagingExtensionSubmitAction(action);
-    }
-
-    // Handles clicking on a messaging extension action button
-    protected async handleTeamsMessagingExtensionFetchTask(context: TurnContext, action: MessagingExtensionAction): Promise<MessagingExtensionActionResponse> {
-        return await this.invokeHandler.handleMessageExtensionFetchTask(context, action);
-    }
-
-    // Handles retrieving data for any messaging extension queries. This could be after typing some search text, or during the initial load
-    // if `initialRun` was set
-    protected async handleTeamsMessagingExtensionQuery(context: TurnContext, query: MessagingExtensionQuery): Promise<MessagingExtensionResponse> {
-        return await this.invokeHandler.handleMessagingExtensionQuery(context, query, context.activity.channelData.source.name);
-    }
-
     // Handles clicking an adaptive card button with `Action.Execute`
     protected async onAdaptiveCardInvoke(context: TurnContext, invokeValue: AdaptiveCardInvokeValue): Promise<AdaptiveCardInvokeResponse> {
         
