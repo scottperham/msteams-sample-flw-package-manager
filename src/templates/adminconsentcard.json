@@ -16,9 +16,9 @@
   ],
   "actions": [
     {
-      "type": "Action.OpenUrl",
+      "type": "Action.SignIn",
       "title": "Grant Admin Consent",
-      "url": "${viewUrl}"
+      "value": "${adminConsentUrl}"
     }
   ],
   "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",

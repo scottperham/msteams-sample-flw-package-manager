@@ -97,7 +97,7 @@
         handleLoginPageLoad = async () => {
 
             clientApp.handleRedirectPromise().then((response) => {
-                window.localStorage.setItem("userToken", response.accessToken);
+                window.localStorage.setItem("graphToken", response.accessToken);
                 passToken();
 
             })};
