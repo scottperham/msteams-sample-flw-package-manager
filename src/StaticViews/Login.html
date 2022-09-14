@@ -22,9 +22,10 @@
         //declare scopes that you want to request in the returned access_token. If consent is required, MSAL will handle this
 
         var requestObj = {
-            scopes: ["https://graph.microsoft.com/.default"],
+            scopes: [window.global.applicationIdUri + "/access_as_user"],
+            prompt: "select_account",
+            extraScopesToConsent ["https://graph.microsoft.com/.default"]
             // the /.default scope will look at the scopes defined in your app reg, and ask for them to be consented to. This will return a Graph API token
-            prompt: "select_account"
         };
 
         //initalize the MSAL browser clientapp with the MSAL configuration
