@@ -5,7 +5,7 @@
         "type": "TextBlock",
         "size": "Medium",
         "weight": "Bolder",
-        "text": "Response sent re package: ${packageId} to:"
+        "text": "Response re package: ${packageId} from:"
       },
       {
         "type": "ColumnSet",
@@ -16,7 +16,7 @@
               {
                 "type": "Image",
                 "style": "Person",
-                "url": "${from.profileImage}",
+                "url": "${accountManager.profileImage}",
                 "size": "Small"
               }
             ],
@@ -29,12 +29,12 @@
                 "type": "TextBlock",
                 "spacing": "None",
                 "wrap": true,
-                "text": "${from.name}",
+                "text": "${accountManager.name}",
                 "weight": "Bolder"
               },
               {
                 "type": "TextBlock",
-                "text": "${$root.from.jobTitle}",
+                "text": "${$root.accountManager.jobTitle}",
                 "wrap": true,
                 "spacing": "None",
                 "isSubtle": true
@@ -58,6 +58,28 @@
       }
     ],
     "actions": [
+      {
+        "type": "Action.ShowCard",
+        "title": "Respond",
+        "card": {
+          "type": "AdaptiveCard",
+          "body": [
+            {
+              "type": "Input.Text",
+              "id": "message",
+              "placeholder": "Message to ${from.name}",
+              "isMultiline": true
+            }
+          ],
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Send"
+            }
+          ],
+          "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+        }
+      },
       {
         "type": "Action.ShowCard",
         "title": "Details",
