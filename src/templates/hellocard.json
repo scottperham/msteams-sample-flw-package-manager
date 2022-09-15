@@ -27,15 +27,20 @@
               "body": [
                 {
                   "type": "Input.Text",
-                  "id": "message",
+                  "id": "packageId",
                   "placeholder": "Enter Package ID",
                   "isMultiline": true
                 }
               ],
               "actions": [
                 {
-                  "type": "Action.Submit",
-                  "title": "Send"
+                  "type": "Action.Execute",
+                  "title": "Send",
+                  "style": "positive",
+                  "verb": "SendPackageId",
+                  "data": {
+                      "commandId": "SendPackageId"
+                  }
                 }
               ],
               "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"

@@ -68,9 +68,27 @@
               "type": "FactSet",
               "facts": [
                 {
-                  "$data": "${properties}",
-                  "title": "${key}:",
-                  "value": "${value}"
+                  "title": "Customer",
+                  "value": "${customerDisplayName}"
+                },
+                {
+                  "title": "Contains",
+                  "value": "${contains}"
+                },
+                {
+                  "title": "Priority",
+                  "value": "${priority}"
+                },
+                {
+                  "title": "Delivery Address",
+                  "value": "${deliveryAddress}"
+                },{
+                  "title": "Status",
+                  "value": "${status}"
+                },
+                {
+                  "title": "COSHH",
+                  "value": "${coshh}"
                 }
               ]
             }

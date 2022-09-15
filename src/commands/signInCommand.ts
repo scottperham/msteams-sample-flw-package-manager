@@ -1,22 +1,22 @@
 import { CardFactory, MessageFactory, TurnContext } from "botbuilder";
 import { ServiceContainer } from "../services/data/serviceContainer";
-import { TokenProvider } from "../services/tokenProvider";
+import { UserProvider } from "../services/userProvider";
 import { CommandBase } from "./commandBase";
 import { randomUUID } from "crypto";
 
 export class SignInCommand extends CommandBase {
 
-    tokenProvider: TokenProvider;
+    userProvider: UserProvider;
 
-    constructor(services: ServiceContainer, tokenProvider: TokenProvider) {
+    constructor(services: ServiceContainer, userProvider: UserProvider) {
         super("signin", services);
 
-        this.tokenProvider = tokenProvider;
+        this.userProvider = userProvider;
     }
 
     public async execute(turnContext: TurnContext): Promise<void> {
 
-        if (await this.tokenProvider.hasToken(turnContext)) {
+        if (await this.userProvider.hasUser(turnContext)) {
             await turnContext.sendActivity("You are already signed in");
             return;
         }

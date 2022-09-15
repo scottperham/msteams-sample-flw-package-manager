@@ -95,6 +95,18 @@ export class DataService<T extends IdentifiableEntity> {
         return result;
     }
 
+    public async Update(obj: T) : Promise<T> {
+
+        for (var i = 0; i < this.data.length; i++) {
+            if (this.data[i].id === obj.id) {
+                this.data[i] = obj;
+                break;
+            }
+        }
+
+        return obj;
+    }
+
     protected add(obj: T) : Promise<undefined> {
         this.data.push(obj);
         return this.promisify(undefined);

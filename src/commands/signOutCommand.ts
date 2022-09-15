@@ -1,27 +1,27 @@
 import { MessageFactory, TurnContext } from "botbuilder";
 import { ServiceContainer } from "../services/data/serviceContainer";
-import { TokenProvider } from "../services/tokenProvider";
+import { UserProvider } from "../services/userProvider";
 import { CommandBase } from "./commandBase";
 
 export class SignOutCommand extends CommandBase {
 
-    tokenProvider: TokenProvider;
+    userProvider: UserProvider;
 
-    constructor(services: ServiceContainer, tokenProvider: TokenProvider) {
+    constructor(services: ServiceContainer, userProvider: UserProvider) {
         super("signout", services);
 
-        this.tokenProvider = tokenProvider;
+        this.userProvider = userProvider;
     }
 
     public async execute(turnContext: TurnContext): Promise<void> {
 
-        if (!await this.tokenProvider.hasToken(turnContext)) {
+        if (!await this.userProvider.hasUser(turnContext)) {
             await turnContext.sendActivity("You are not signed in");
             return;
         }
 
         // We are simply going to clear the user state for the token
-        await this.tokenProvider.setToken("", turnContext);
+        await this.userProvider.setUser(undefined, turnContext);
         
         await turnContext.sendActivity("You have been successfuly signed out");
     }

@@ -67,14 +67,20 @@
             {
               "type": "Input.Text",
               "id": "message",
-              "placeholder": "Message to ${from.name}",
+              "placeholder": "Message to ${from}",
               "isMultiline": true
             }
           ],
           "actions": [
             {
-              "type": "Action.Submit",
-              "title": "Send"
+              "type": "Action.Execute",
+              "title": "Send",
+              "style": "positive",
+              "verb": "NotifyAm",
+              "data": {
+                  "commandId": "NotifyAm",
+                  "packageId": "${packageId}"
+              }
             }
           ],
           "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
@@ -90,9 +96,27 @@
               "type": "FactSet",
               "facts": [
                 {
-                  "$data": "${properties}",
-                  "title": "${key}:",
-                  "value": "${value}"
+                  "title": "Customer",
+                  "value": "${customerDisplayName}"
+                },
+                {
+                  "title": "Contains",
+                  "value": "${contains}"
+                },
+                {
+                  "title": "Priority",
+                  "value": "${priority}"
+                },
+                {
+                  "title": "Delivery Address",
+                  "value": "${deliveryAddress}"
+                },{
+                  "title": "Status",
+                  "value": "${status}"
+                },
+                {
+                  "title": "COSHH",
+                  "value": "${coshh}"
                 }
               ]
             }

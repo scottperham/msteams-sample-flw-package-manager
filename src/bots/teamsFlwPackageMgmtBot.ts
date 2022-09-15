@@ -4,12 +4,11 @@ import { HelpCommand } from "../commands/helpCommand";
 import { PackageDetailsCommand } from "../commands/packageDetailsCommand";
 import { ServiceContainer } from "../services/data/serviceContainer";
 import { InvokeActivityHandler } from "../services/invokeActivityHandler";
-import { TokenProvider } from "../services/tokenProvider";
 import { SignOutCommand } from "../commands/signOutCommand";
 import { SignInCommand } from "../commands/signInCommand";
-import { SetupCommand } from "../commands/setupCommand";
 import { ConsentCommand } from "../commands/consentCommand";
 import { HelloCommand } from "../commands/helloCommand";
+import { UserProvider } from "../services/userProvider";
 
 export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
 
@@ -18,7 +17,7 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
     commands: {command: CommandBase, requireAuth: boolean}[];
     defaultCommand: CommandBase;
     services: ServiceContainer;
-    tokenProvider: TokenProvider;
+    userProvider: UserProvider;
 
     constructor(userState: UserState, services: ServiceContainer) {
         super();
@@ -26,16 +25,15 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
         this.userState = userState;
         this.services = services;
 
-        this.tokenProvider = new TokenProvider(userState);
-        this.invokeHandler = new InvokeActivityHandler(this.tokenProvider, services);
+        this.userProvider = new UserProvider(userState);
+        this.invokeHandler = new InvokeActivityHandler(this.userProvider, services);
 
         // Setup a simple array of available command implementations and whether they require authentication or not
         this.commands = [
             {command: new HelpCommand(services), requireAuth: false },
             {command: new PackageDetailsCommand(services), requireAuth: false},
-            {command: new SetupCommand(services, this.tokenProvider), requireAuth: true},
-            {command: new SignOutCommand(services, this.tokenProvider), requireAuth: false},
-            {command: new SignInCommand(services, this.tokenProvider), requireAuth: false},
+            {command: new SignOutCommand(services, this.userProvider), requireAuth: false},
+            {command: new SignInCommand(services, this.userProvider), requireAuth: false},
             {command: new ConsentCommand(services), requireAuth: false}
         ]
 
@@ -92,11 +90,11 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
 
             if (commandContainer.requireAuth) {
 
-                if (!await this.tokenProvider.hasToken(context)) {
+                if (!await this.userProvider.hasUser(context)) {
                     // We've found the command and determined that you need to be signed in
                     // to execute it. As there is no cached token, we create this as a sign in
                     // command instead to take the user though the sign in and consent flow
-                    command = new SignInCommand(this.services, this.tokenProvider);
+                    command = new SignInCommand(this.services, this.userProvider);
                 }
             }
             
@@ -114,12 +112,18 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
     // Handles clicking an adaptive card button with `Action.Execute`
     protected async onAdaptiveCardInvoke(context: TurnContext, invokeValue: AdaptiveCardInvokeValue): Promise<AdaptiveCardInvokeResponse> {
         
+        const user = await this.userProvider.getUser(context);
+
         //Buttons with action.execute have a "verb" property to determine what the bot should do with the posted data
         switch(invokeValue.action.verb) {
             case "NotifyAm":
                 return await this.invokeHandler.handleNotifyAccountManager(invokeValue.action.data, context.activity.from.name, context.activity.channelData.tenant.id);
             case "MarkAsSent":
                 return await this.invokeHandler.handleMarkAsSent(invokeValue.action.data);
+            case "SendPackageId":
+                return await this.invokeHandler.handleSendPackageId(invokeValue.action.data);
+            case "NotifyFlw":
+                return await this.invokeHandler.handleSendNotifyFlw(invokeValue.action.data, context.activity.channelData.tenant.id, user!);
         }
 
         return {

@@ -1,4 +1,4 @@
-import { Package } from "./dtos";
+import { Package, User } from "./dtos";
 import * as fs from 'fs';
 import * as path from 'path';
 import * as act from 'adaptivecards-templating';
@@ -33,6 +33,50 @@ export class TemplatingService {
         this.helloTemplate = fs.readFileSync(path.join(templatesPath, "hellocard.json")).toString();
     }
 
+    public getAccountManagerMessageAttachment(parcel: Package, from: string, message: string) : Attachment {
+        const template = new act.Template(JSON.parse(this.amCardTemplate));
+        const payload = template.expand({
+            $root: {
+                ...parcel,
+                from,
+                message,
+                customerDisplayName: `${parcel.customer} - ${parcel.customerId}`,
+                viewUrl: "https://google.com"
+            }
+        });
+
+        return CardFactory.adaptiveCard(payload);    
+    }
+
+    public getFlwMessageSentAttachment(parcel: Package, from: User, message: string) : Attachment {
+        const template = new act.Template(JSON.parse(this.amCardMessageSentTemplate));
+        const payload = template.expand({
+            $root: {
+                ...parcel,              
+                from,
+                message,
+                customerDisplayName: `${parcel.customer} - ${parcel.customerId}`,
+                viewUrl: "https://google.com"
+            }
+        });
+
+        return CardFactory.adaptiveCard(payload);    
+    }
+
+    public getFlwMessageAttachment(parcel: Package, message: string) : Attachment {
+        const template = new act.Template(JSON.parse(this.flwResponseFromAmTemplate));
+        const payload = template.expand({
+            $root: {
+                ...parcel,
+                message,
+                customerDisplayName: `${parcel.customer} - ${parcel.customerId}`,
+                viewUrl: "https://google.com"
+            }
+        });
+
+        return CardFactory.adaptiveCard(payload);    
+    }
+
     public getPackageAttachment(parcel: Package) : Attachment {
         const template = new act.Template(JSON.parse(this.flwPackageTemplate));
         const payload = template.expand({
@@ -52,6 +96,7 @@ export class TemplatingService {
             $root: {
                 ...parcel,              
                 message,
+                customerDisplayName: `${parcel.customer} - ${parcel.customerId}`,
                 viewUrl: "https://google.com"
             }
         });

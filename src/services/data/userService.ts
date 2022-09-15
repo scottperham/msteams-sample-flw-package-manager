@@ -16,6 +16,11 @@ export class UserService extends DataService<User> {
         
     }
 
+    public async getByAlias(alias: string): Promise<User | undefined> {
+        const users = await this.filter(x => x.alias.toLocaleLowerCase() == alias.toLocaleLowerCase(), undefined, true);
+        return users.length > 0 ? users[0] : undefined;
+    }
+
     public async searchOne(searchText: string) : Promise<User | undefined> {
         const users = await this.search(searchText, 1);
         return users.length == 0 ? undefined : users[0];
