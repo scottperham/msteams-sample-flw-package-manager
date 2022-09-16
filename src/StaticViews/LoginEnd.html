@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://res.cdn.office.net/teams-js/2.0.0/js/MicrosoftTeams.min.js" integrity="sha384-QtTBFeFlfRDZBfwHJHYQp7MdLJ2C3sfAEB1Qpy+YblvjavBye+q87TELpTnvlXw4" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.16.1/js/msal-browser.js"></script>
+
+    <script type="text/javascript">
+        //process the result and close the authentication page down...    
+        async function loadPage() {
+            await microsoftTeams.app.initialize();
+
+            var urlParams = new URLSearchParams(window.location.search);
+            var adminConsent = urlParams.get('admin_consent');
+            var error = urlParams.get('error');
+
+            //Get AppId from local storage - this value doesn't change so could be from config instead
+            var appId = window.localStorage.getItem("microsoftAppId");
+
+            if (error) {
+                //if admin consent fails, then notify the bot
+                microsoftTeams.authentication.notifyFailure("ConsentFailed");
+            }
+            else {
+                //notifies the bot that admin consent (based on the URL query params) was successful
+                microsoftTeams.authentication.notifySuccess("AdminConsent");
+            }
+        }
+
+        $(loadPage());
+    
+    </script>
+    </head> 
+    <body>
+</body>
+</html>

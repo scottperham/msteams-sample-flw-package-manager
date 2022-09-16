@@ -128,7 +128,7 @@ export class TemplatingService {
                     type: ActionTypes.Signin,
                     title: "Provide Admin Consent",
                     text: "Provide Admin Consent",
-                    value: `${process.env.BaseUrl}StaticViews/Login.html`
+                    value: `${process.env.BaseUrl}StaticViews/LoginStart.html?appId=${process.env.MicrosoftAppId}`
                 }
             ]);
 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.16.1/js/msal-browser.js"></script>
+    <title>Contoso - Consent</title>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.16.1/js/msal-browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+        async function loadPage() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var appId = urlParams.get('appId');
+
+            window.localStorage.setItem("microsoftAppId", appId);
+
+            window.location.assign("https://login.microsoftonline.com/common/adminconsent?client_id=" + appId + "&redirect_uri=" + encodeURIComponent(window.location.origin + "/StaticViews/LoginEnd.html"));
+        }
+        
+        $(loadPage());
+
+    
+    </script>
+</head>
+<body>
+</body>
+</html>
