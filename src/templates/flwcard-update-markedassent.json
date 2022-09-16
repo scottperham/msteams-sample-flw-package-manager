@@ -16,9 +16,49 @@
   ],
   "actions": [
     {
-      "type": "Action.OpenUrl",
+      "type": "Action.ShowCard",
       "title": "Details",
-      "url": "${viewUrl}"
+      "card": {
+        "type": "AdaptiveCard",
+        "body": [
+          {
+            "type": "FactSet",
+            "facts": [
+              {
+                "title": "Customer",
+                "value": "${customerDisplayName}"
+              },
+              {
+                "title": "Contains",
+                "value": "${contains}"
+              },
+              {
+                "title": "Priority",
+                "value": "${priority}"
+              },
+              {
+                "title": "Delivery Address",
+                "value": "${deliveryAddress}"
+              },{
+                "title": "Status",
+                "value": "${status}"
+              },
+              {
+                "title": "COSHH",
+                "value": "${coshh}"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "Action.OpenUrl",
+            "title": "More Info ↗",
+            "url": "${viewUrl}"
+          }
+        ],
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+      }
     }
   ],
   "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",

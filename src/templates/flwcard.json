@@ -120,7 +120,7 @@
     },
     {
       "type": "Action.OpenUrl",
-      "title": "Details",
+      "title": "More Info ↗",
       "url": "${viewUrl}"
     }
   ],

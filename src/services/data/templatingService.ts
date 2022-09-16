@@ -108,7 +108,8 @@ export class TemplatingService {
         const template = new act.Template(JSON.parse(this.flwPackageMarkAsSentTemplate));
         const payload = template.expand({
             $root: {
-                ...parcel,              
+                ...parcel,        
+                customerDisplayName: `${parcel.customer} - ${parcel.customerId}`,      
                 viewUrl: "https://google.com"
             }
         });

@@ -48,7 +48,7 @@
           },
           {
             "type": "Action.OpenUrl",
-            "title": "Web App",
+            "title": "Web App ↗",
             "url": "${viewUrl}"
           }
         ]

@@ -124,7 +124,7 @@
           "actions": [
             {
               "type": "Action.OpenUrl",
-              "title": "More Info",
+              "title": "More Info ↗",
               "url": "${viewUrl}"
             }
           ],
