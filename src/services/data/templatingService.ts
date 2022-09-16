@@ -13,7 +13,6 @@ export class TemplatingService {
     flwResponseFromAmTemplate: string = "";
     amCardTemplate: string = "";
     amCardMessageSentTemplate: string = "";
-    consentTemplate: string = "";
     helloTemplate: string = "";
     errorTemplate: string = "";
     templatesPath: string = "";
@@ -29,7 +28,6 @@ export class TemplatingService {
         this.amCardMessageSentTemplate = fs.readFileSync(path.join(templatesPath, "amcard-update-responsecard.json")).toString();
 
         this.errorTemplate = fs.readFileSync(path.join(templatesPath, "errorcard.json")).toString();
-        this.consentTemplate = fs.readFileSync(path.join(templatesPath, "adminconsentcard.json")).toString();
         this.helloTemplate = fs.readFileSync(path.join(templatesPath, "hellocard.json")).toString();
     }
 
@@ -131,24 +129,6 @@ export class TemplatingService {
                     value: `${process.env.BaseUrl}StaticViews/LoginStart.html?appId=${process.env.MicrosoftAppId}`
                 }
             ]);
-
-        // return CardFactory.heroCard(
-        //     "Admin Consent",
-        //     "This application requires a tenant administrator to consent to Graph API scopes to enable proactive messaging and app/bot install. If you are a customer admin, please click the button below to complete on-boarding.", 
-        //     null,[
-        //     {
-        //         type: ActionTypes.Signin,
-        //         title: "Provide Admin Consent",
-        //         text: "Provide Admin Consent",
-        //         value: `${process.env.BaseUrl}StaticViews/Login.html`
-        //     }
-        // ]);
-
-
-        // return CardFactory.signinCard(
-        //     "Consent", 
-        //     `${process.env.BaseUrl}StaticViews/Login.html`, 
-        //     "This application requires a tenant administrator to consent to Graph API scopes to enable proactive messaging and app/bot install. If you are a customer admin, please click the button below to complete on-boarding.");
     }
 
     public getHelloAttachment(from: string) : Attachment {
