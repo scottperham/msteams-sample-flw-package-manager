@@ -2,7 +2,7 @@ import { Package, User } from "./dtos";
 import * as fs from 'fs';
 import * as path from 'path';
 import * as act from 'adaptivecards-templating';
-import { Attachment, CardFactory } from "botbuilder";
+import { ActionTypes, Attachment, CardFactory } from "botbuilder";
 
 
 export class TemplatingService {
@@ -118,14 +118,37 @@ export class TemplatingService {
     }
 
     public getConsentAttachment() : Attachment {
-        const template = new act.Template(JSON.parse(this.consentTemplate));
-        const payload = template.expand({
-            $root: {
-                viewUrl: "https://google.com"
-            }
-        });
 
-        return CardFactory.adaptiveCard(payload);  
+        return CardFactory.heroCard(
+            "Admin Consent",
+            "This application requires a tenant administrator to consent to Graph API scopes to enable proactive messaging and app/bot install. If you are a customer admin, please click the button below to complete on-boarding.", 
+            undefined,
+            [
+                {
+                    type: ActionTypes.Signin,
+                    title: "Provide Admin Consent",
+                    text: "Provide Admin Consent",
+                    value: `${process.env.BaseUrl}StaticViews/Login.html`
+                }
+            ]);
+
+        // return CardFactory.heroCard(
+        //     "Admin Consent",
+        //     "This application requires a tenant administrator to consent to Graph API scopes to enable proactive messaging and app/bot install. If you are a customer admin, please click the button below to complete on-boarding.", 
+        //     null,[
+        //     {
+        //         type: ActionTypes.Signin,
+        //         title: "Provide Admin Consent",
+        //         text: "Provide Admin Consent",
+        //         value: `${process.env.BaseUrl}StaticViews/Login.html`
+        //     }
+        // ]);
+
+
+        // return CardFactory.signinCard(
+        //     "Consent", 
+        //     `${process.env.BaseUrl}StaticViews/Login.html`, 
+        //     "This application requires a tenant administrator to consent to Graph API scopes to enable proactive messaging and app/bot install. If you are a customer admin, please click the button below to complete on-boarding.");
     }
 
     public getHelloAttachment(from: string) : Attachment {

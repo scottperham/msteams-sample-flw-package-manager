@@ -10,9 +10,8 @@ export class ConsentCommand extends CommandBase {
     }
 
     public async execute(turnContext: TurnContext): Promise<void> {
-        const card = this.services.templatingService.getConsentAttachment();
 
-        const activity = MessageFactory.attachment(card);
+        const activity = MessageFactory.attachment(this.services.templatingService.getConsentAttachment());
 
         await turnContext.sendActivity(activity);
     }
