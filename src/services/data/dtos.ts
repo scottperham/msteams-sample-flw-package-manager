@@ -26,14 +26,12 @@ export type Package = IdentifiableEntity & {
 }
 
 export type AccountManagerMessage = {
-    authorName: string
     packageId: string
     message: string
 }
 
-export const convertInvokeActionDataToPackageData = (data: any, authorName: string) : AccountManagerMessage => {
+export const convertInvokeActionDataToPackageData = (data: any) : AccountManagerMessage => {
     return {
-        authorName,
         packageId: data.packageId,
         message: data.message
     }

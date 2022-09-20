@@ -46,18 +46,19 @@ export class InvokeActivityHandler {
 
     public async handleSendNotifyFlw(invokeData: any, tenantId: string, user: User): Promise<AdaptiveCardInvokeResponse> {
         const parcel = await this.services.packageService.getByPackageId(invokeData.packageId);
+        const flwUser = await this.services.userService.getById(invokeData.fromId);
 
         if (!parcel) {
             return this.getAdaptiveCardInvokeResponse(404);
         }
-
-        if (!parcel.accountManager) {
+        
+        if (!flwUser) {
             return this.getAdaptiveCardInvokeResponse(404);
         }
 
-        const activity = MessageFactory.attachment(this.services.templatingService.getFlwMessageAttachment(parcel, invokeData.message));
+        const activity = MessageFactory.attachment(this.services.templatingService.getFlwMessageAttachment(parcel, invokeData.message, user.name));
 
-        const error = await this.sendProactiveNotification(parcel.accountManager.alias, tenantId, activity);
+        const error = await this.sendProactiveNotification(flwUser.alias, tenantId, activity);
 
         if (error) {
             return this.getAdaptiveCardInvokeResponse(200, this.services.templatingService.getErrorAttachment(error));
@@ -67,8 +68,8 @@ export class InvokeActivityHandler {
         return this.getAdaptiveCardInvokeResponse(200, updatedCard);
     }
     
-    public async handleNotifyAccountManager(invokeData: any, authorName: string, tenantId: string): Promise<AdaptiveCardInvokeResponse> {
-        const packageData = convertInvokeActionDataToPackageData(invokeData, authorName);
+    public async handleNotifyAccountManager(invokeData: any, from: User, tenantId: string): Promise<AdaptiveCardInvokeResponse> {
+        const packageData = convertInvokeActionDataToPackageData(invokeData);
         const parcel = await this.services.packageService.getByPackageId(packageData.packageId);
 
         if (!parcel) {
@@ -80,7 +81,7 @@ export class InvokeActivityHandler {
         }
 
         //const activity = MessageFactory.text(`This is a message from ${authorName}: ${packageData.message}`);
-        const activity = MessageFactory.attachment(this.services.templatingService.getAccountManagerMessageAttachment(parcel, authorName, packageData.message));
+        const activity = MessageFactory.attachment(this.services.templatingService.getAccountManagerMessageAttachment(parcel, from, packageData.message));
 
         const error = await this.sendProactiveNotification(parcel.accountManager.alias, tenantId, activity);
 
@@ -93,7 +94,7 @@ export class InvokeActivityHandler {
     }
     
     public async handleMarkAsSent(invokeData: any): Promise<AdaptiveCardInvokeResponse> {
-        const packageData = convertInvokeActionDataToPackageData(invokeData, "");
+        const packageData = convertInvokeActionDataToPackageData(invokeData);
         const parcel = await this.services.packageService.getByPackageId(packageData.packageId);
 
         if (!parcel) {

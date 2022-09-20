@@ -1,4 +1,4 @@
-import { TeamsActivityHandler, TurnContext, UserState, Activity, SigninStateVerificationQuery, MessageFactory, AdaptiveCardInvokeResponse, AdaptiveCardInvokeValue, MessagingExtensionQuery, MessagingExtensionResponse, MessagingExtensionAction, MessagingExtensionActionResponse, FileConsentCardResponse, StatePropertyAccessor } from "botbuilder";
+import { TeamsActivityHandler, TurnContext, UserState, Activity, SigninStateVerificationQuery, MessageFactory, AdaptiveCardInvokeResponse, AdaptiveCardInvokeValue, MessagingExtensionQuery, MessagingExtensionResponse, MessagingExtensionAction, MessagingExtensionActionResponse, FileConsentCardResponse, StatePropertyAccessor, InvokeResponse } from "botbuilder";
 import { CommandBase } from "../commands/commandBase";
 import { HelpCommand } from "../commands/helpCommand";
 import { PackageDetailsCommand } from "../commands/packageDetailsCommand";
@@ -31,7 +31,7 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
         // Setup a simple array of available command implementations and whether they require authentication or not
         this.commands = [
             {command: new HelpCommand(services), requireAuth: false },
-            {command: new PackageDetailsCommand(services), requireAuth: false},
+            {command: new PackageDetailsCommand(services), requireAuth: true},
             {command: new SignOutCommand(services, this.userProvider), requireAuth: false},
             {command: new SignInCommand(services, this.userProvider), requireAuth: false},
             {command: new ConsentCommand(services), requireAuth: false}
@@ -81,22 +81,20 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
     // we had more complex conversational flows between the user and the bot... but we dont!
     private async handleTextMessage(context: TurnContext, text: string) : Promise<void> {
 
+        if (!await this.userProvider.hasUser(context)) {
+            // We've found the command and determined that you need to be signed in
+            // to execute it. As there is no cached token, we create this as a sign in
+            // command instead to take the user though the sign in and consent flow
+            await new SignInCommand(this.services, this.userProvider).execute(context);
+            return
+        }
+
         const commandText = text.trim().toLowerCase();
         const commandContainer = this.commands.find(x => commandText.startsWith(x.command.id))
 
         if (commandContainer) {
 
             let command = commandContainer.command;
-
-            if (commandContainer.requireAuth) {
-
-                if (!await this.userProvider.hasUser(context)) {
-                    // We've found the command and determined that you need to be signed in
-                    // to execute it. As there is no cached token, we create this as a sign in
-                    // command instead to take the user though the sign in and consent flow
-                    command = new SignInCommand(this.services, this.userProvider);
-                }
-            }
             
             // Execute the command
             await command.execute(context);
@@ -117,7 +115,7 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
         //Buttons with action.execute have a "verb" property to determine what the bot should do with the posted data
         switch(invokeValue.action.verb) {
             case "NotifyAm":
-                return await this.invokeHandler.handleNotifyAccountManager(invokeValue.action.data, context.activity.from.name, context.activity.channelData.tenant.id);
+                return await this.invokeHandler.handleNotifyAccountManager(invokeValue.action.data, user!, context.activity.channelData.tenant.id);
             case "MarkAsSent":
                 return await this.invokeHandler.handleMarkAsSent(invokeValue.action.data);
             case "SendPackageId":
@@ -136,6 +134,10 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
     // Handles the callback from a signin and consent attempt - the token is in `context.activity.value.token`
     protected async handleTeamsSigninTokenExchange(context: TurnContext, query: SigninStateVerificationQuery): Promise<void> {
         await this.invokeHandler.handleSignInVerifyState(context);
+    }
+
+    protected handleTeamsSigninVerifyState(_context: TurnContext, _query: SigninStateVerificationQuery): Promise<void> {
+        return Promise.resolve();
     }
 
     private hasFiles(activity: Activity) : boolean {
