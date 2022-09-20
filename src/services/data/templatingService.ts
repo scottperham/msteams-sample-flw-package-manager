@@ -31,7 +31,7 @@ export class TemplatingService {
         this.helloTemplate = fs.readFileSync(path.join(templatesPath, "hellocard.json")).toString();
     }
 
-    public getAccountManagerMessageAttachment(parcel: Package, from: string, message: string) : Attachment {
+    public getAccountManagerMessageAttachment(parcel: Package, from: User, message: string) : Attachment {
         const template = new act.Template(JSON.parse(this.amCardTemplate));
         const payload = template.expand({
             $root: {
@@ -61,12 +61,13 @@ export class TemplatingService {
         return CardFactory.adaptiveCard(payload);    
     }
 
-    public getFlwMessageAttachment(parcel: Package, message: string) : Attachment {
+    public getFlwMessageAttachment(parcel: Package, message: string, from: string) : Attachment {
         const template = new act.Template(JSON.parse(this.flwResponseFromAmTemplate));
         const payload = template.expand({
             $root: {
                 ...parcel,
                 message,
+                from,
                 customerDisplayName: `${parcel.customer} - ${parcel.customerId}`,
                 viewUrl: "https://google.com"
             }

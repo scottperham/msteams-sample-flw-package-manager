@@ -67,7 +67,7 @@
             {
               "type": "Input.Text",
               "id": "message",
-              "placeholder": "Message to ${from}",
+              "placeholder": "Message to ${from.name}",
               "isMultiline": true
             }
           ],
@@ -79,7 +79,8 @@
               "verb": "NotifyFlw",
               "data": {
                   "commandId": "NotifyFlw",
-                  "packageId": "${packageId}"
+                  "packageId": "${packageId}",
+                  "fromId": "${from.id}"
               }
             }
           ],
