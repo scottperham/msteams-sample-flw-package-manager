@@ -37,7 +37,8 @@
         }
     ],
     "validDomains": [
-        "*.ngrok.io"
+        "*.ngrok.io",
+        "*.eu.ngrok.io"
     ],
     "webApplicationInfo": {
         "id": "6a56bee2-c36e-4838-a0c2-7cf53be8bcd0",
