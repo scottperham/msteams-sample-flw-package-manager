@@ -26,10 +26,9 @@
               "type": "AdaptiveCard",
               "body": [
                 {
-                  "type": "Input.Text",
+                  "type": "Input.Number",
                   "id": "packageId",
-                  "placeholder": "Enter Package ID",
-                  "isMultiline": true
+                  "placeholder": "Enter Package ID"
                 }
               ],
               "actions": [
