@@ -1,0 +1,49 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.14/MicrosoftTeams.schema.json",
+    "version": "1.0.0",
+    "manifestVersion": "1.14",
+    "id": "8e45d10e-b4ca-4d71-83f7-5bef97638697",
+    "packageName": "com.package.name",
+    "name": {
+        "short": "Package Manager Bot",
+        "full": "Package Manager Bot"
+    },
+    "developer": {
+        "name": "Contoso Plc",
+        "mpnId": "",
+        "websiteUrl": "https://www.contoso.com",
+        "privacyUrl": "https://www.contoso.com",
+        "termsOfUseUrl": "https://www.contoso.com"
+    },
+    "description": {
+        "short": "Allows Contoso employees to manage packages, without leaving Teams!",
+        "full": "Allows Contoso employees to manage packages, without leaving Teams!"
+    },
+    "icons": {
+        "outline": "outline.png",
+        "color": "color.png"
+    },
+    "accentColor": "#ff0000",
+    "bots": [
+        {
+            "botId": "6a56bee2-c36e-4838-a0c2-7cf53be8bcd0",
+            "scopes": [
+                "personal"
+            ],
+            "isNotificationOnly": false,
+            "supportsCalling": false,
+            "supportsVideo": false,
+            "supportsFiles": false
+        }
+    ],
+    "validDomains": [
+        "*.ngrok.io"
+    ],
+    "webApplicationInfo": {
+        "id": "6a56bee2-c36e-4838-a0c2-7cf53be8bcd0",
+        "resource": "api://jalew123.eu.ngrok.io/botid-6a56bee2-c36e-4838-a0c2-7cf53be8bcd0"
+    },
+    "devicePermissions": [
+        "Media"
+    ]
+}
