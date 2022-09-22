@@ -16,7 +16,7 @@
               {
                 "type": "Image",
                 "style": "Person",
-                "url": "${from.profileImage}",
+                "url": "${to.profileImage}",
                 "size": "Small"
               }
             ],
@@ -29,12 +29,12 @@
                 "type": "TextBlock",
                 "spacing": "None",
                 "wrap": true,
-                "text": "${from.name}",
+                "text": "${to.name}",
                 "weight": "Bolder"
               },
               {
                 "type": "TextBlock",
-                "text": "${$root.from.jobTitle}",
+                "text": "${$root.to.jobTitle}",
                 "wrap": true,
                 "spacing": "None",
                 "isSubtle": true

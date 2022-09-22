@@ -46,12 +46,12 @@ export class TemplatingService {
         return CardFactory.adaptiveCard(payload);    
     }
 
-    public getFlwMessageSentAttachment(parcel: Package, from: User, message: string) : Attachment {
+    public getFlwMessageSentAttachment(parcel: Package, to: User, message: string) : Attachment {
         const template = new act.Template(JSON.parse(this.amCardMessageSentTemplate));
         const payload = template.expand({
             $root: {
                 ...parcel,              
-                from,
+                to,
                 message,
                 customerDisplayName: `${parcel.customer} - ${parcel.customerId}`,
                 viewUrl: "https://google.com"

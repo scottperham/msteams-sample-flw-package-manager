@@ -5,7 +5,7 @@
         "type": "TextBlock",
         "size": "Medium",
         "weight": "Bolder",
-        "text": "Message re package: ${packageId}"
+        "text": "Message re package: ${packageId} from:"
       },
       {
         "type": "ColumnSet",
@@ -16,7 +16,7 @@
               {
                 "type": "Image",
                 "style": "Person",
-                "url": "${accountManager.profileImage}",
+                "url": "${from.profileImage}",
                 "size": "Small"
               }
             ],
@@ -29,12 +29,12 @@
                 "type": "TextBlock",
                 "spacing": "None",
                 "wrap": true,
-                "text": "${accountManager.name}",
+                "text": "${from.name}",
                 "weight": "Bolder"
               },
               {
                 "type": "TextBlock",
-                "text": "${$root.accountManager.jobTitle}",
+                "text": "${$root.from.jobTitle}",
                 "wrap": true,
                 "spacing": "None",
                 "isSubtle": true

@@ -64,7 +64,7 @@ export class InvokeActivityHandler {
             return this.getAdaptiveCardInvokeResponse(200, this.services.templatingService.getErrorAttachment(error));
         }
 
-        const updatedCard = this.services.templatingService.getFlwMessageSentAttachment(parcel, user, invokeData.message);
+        const updatedCard = this.services.templatingService.getFlwMessageSentAttachment(parcel, flwUser, invokeData.message);
         return this.getAdaptiveCardInvokeResponse(200, updatedCard);
     }
     

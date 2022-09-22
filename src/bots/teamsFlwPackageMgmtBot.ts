@@ -112,6 +112,15 @@ export class TeamsFlwPackageMgmtBot extends TeamsActivityHandler {
         
         const user = await this.userProvider.getUser(context);
 
+        if (!user) {
+            await new SignInCommand(this.services, this.userProvider).execute(context);
+            return {
+                statusCode: 200,
+                type: "",
+                value: {}
+            };
+        }
+
         //Buttons with action.execute have a "verb" property to determine what the bot should do with the posted data
         switch(invokeValue.action.verb) {
             case "NotifyAm":
